@@ -6,11 +6,11 @@ const batchSchema = new Schema<TBatch>(
     batchNumber: {
       type: String,
       required: true,
-    //   unique: true,
-    }, year: {
+      unique: true,
+    },
+    year: {
       type: String,
       required: true,
-    //   unique: true,
     },
     session: {
       type: String,

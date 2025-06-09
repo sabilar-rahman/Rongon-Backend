@@ -51,8 +51,7 @@ const createBatch = catchAsync(async (req: Request, res: Response) => {
 // });
 
 const getAllBatches = catchAsync(async (req: Request, res: Response) => {
-  
-  const batchSearchableFields = ['name', 'year', 'batchNumber', 'session'];
+  const batchSearchableFields = ["name", "year", "batchNumber", "session"];
 
   // Instantiate the builder and chain the desired methods
   const batchQuery = new QueryBuilder(Batch.find(), req.query)
@@ -61,7 +60,7 @@ const getAllBatches = catchAsync(async (req: Request, res: Response) => {
     .sort()
     .paginate()
     .fields()
-    //.populate(); // Example: populate a related field if it exists
+    //.populate("batchId"); // Example: populate a related field if it exists
 
   // Execute the query to get the final result
   const result = await batchQuery.execute();
@@ -70,9 +69,9 @@ const getAllBatches = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Batches retrieved successfully',
+    message: "Batches retrieved successfully",
     meta: result?.meta,
-     data: result?.data ? result?.data : result,
+    data: result?.data ? result?.data : result,
   });
 });
 

@@ -4,6 +4,7 @@ import { Student } from "./student.model";
 import sendResponse from "../utils/sendResponse";
 import AppError from "../../errors/AppError";
 import { Request, Response } from "express";
+import QueryBuilder from "../../builder/queryBuilder";
 
 const createStudent = catchAsync(async (req, res) => {
   const studentData = req.body;
@@ -26,18 +27,50 @@ const createStudent = catchAsync(async (req, res) => {
   });
 });
 
+// const getAllStudent = catchAsync(async (req: Request, res: Response) => {
+//   const student = await Student.find();
+
+//   if (!student) {
+//     throw new AppError(httpStatus.NOT_FOUND, "Student not found");
+//   }
+
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: "Student retrieved successfully",
+//     data: student,
+//   });
+// });
+
 const getAllStudent = catchAsync(async (req: Request, res: Response) => {
-  const student = await Student.find();
+  const studentSearchableFields = ["name", "email", "phoneNumber", "batchId"];
 
-  if (!student) {
-    throw new AppError(httpStatus.NOT_FOUND, "Student not found");
-  }
+  // Instantiate the builder and chain the desired methods
+  const studentQuery = new QueryBuilder(Student.find(), req.query)
+    .search(studentSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields()
+    .populate("batchId");
+    // .populate([
+    //   {
+    //     path: "batchId",
+    //      select: "batchNumber session",
+        
+    //   },
+    // ])
 
+  // Execute the query to get the final result
+  const result = await studentQuery.execute();
+
+  // Send the structured response
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Student retrieved successfully",
-    data: student,
+    message: "Students retrieved successfully",
+    meta: result?.meta,
+    data: result?.data,
   });
 });
 

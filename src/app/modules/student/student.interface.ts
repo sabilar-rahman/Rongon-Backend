@@ -23,6 +23,3 @@ export type TStudent = {
 
 };
 
-// export interface studentModel extends Model<TStudent> {
-//   isUserExists(email: string): Promise<TStudent> | null;
-// }
